@@ -29,7 +29,7 @@ import { GetStaticProps } from "next";
 import { useEffect } from "react";
 import axios from "axios";
 import { urlFor } from "@/sanity";
-import pageInfo from "@/sanity/schemas/pageInfo";
+
 
 type Props = {
   pageInfo: PageInfo;
@@ -58,7 +58,7 @@ type Props = {
 //       socials,
 //       contact,
 //     },
-//     revalidate: 20,
+//     revalidate: 1,
 //   };
 // };
 
@@ -70,33 +70,33 @@ export default function Home({
   projects,
   contact,
 }: Props) {
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const pageInfo = await fetchPageInfo();
-        const experiences = await fetchExperiences();
-        const skills = await fetchSkills();
-        const projects = await fetchProjects();
-        const socials = await fetchSocials();
-        const contact = await fetchContact();
+  // useEffect(() => {
+  //   const fetchData = async () => {
+  //     try {
+  //       const pageInfo = await fetchPageInfo();
+  //       const experiences = await fetchExperiences();
+  //       const skills = await fetchSkills();
+  //       const projects = await fetchProjects();
+  //       const socials = await fetchSocials();
+  //       const contact = await fetchContact();
   
-        // Now you can use pageInfo, experiences, skills, projects, socials, and contact directly
-        return {
-          props: {
-            pageInfo,
-            experiences,
-            skills,
-            projects,
-            socials,
-            contact,
-          },
-        };    } catch (error) {
-        console.error('Error fetching data:', error);
-      }
-    };
+  //       // Now you can use pageInfo, experiences, skills, projects, socials, and contact directly
+  //       return {
+  //         props: {
+  //           pageInfo,
+  //           experiences,
+  //           skills,
+  //           projects,
+  //           socials,
+  //           contact,
+  //         },
+  //       };    } catch (error) {
+  //       console.error('Error fetching data:', error);
+  //     }
+  //   };
   
-    fetchData();
-  }, []);
+  //   fetchData();
+  // }, []);
   
 
   const pageInfoWithHeroImage = pageInfo as PageInfo;
@@ -132,14 +132,36 @@ export default function Home({
       <Link href="#hero">
         <footer className="sticky top:0 md:bottom-5 w-full cursor-pointer">
           <div className="flex items-center justify-end p-5">
-            {/* <img
+            <img
               className=" h-10 w-10 object-cover rounded-full filter grayscale hover:grayscale-0 cursor-pointer"
               src={urlFor(pageInfoWithHeroImage?.heroImage).url()}
               alt="avatar"
-            /> */}
+            />
           </div>
         </footer>
       </Link>
     </div>
   );
+}
+
+
+export const getStaticProps: GetStaticProps<Props> = async () => {
+  const pageInfo = await fetchPageInfo();
+  const experiences = await fetchExperiences();
+  const skills = await fetchSkills();
+  const projects = await fetchProjects();
+  const socials = await fetchSocials();
+  const contact = await fetchContact();
+
+  return {
+    props: {
+      pageInfo,
+      experiences,
+      skills,
+      projects,
+      socials,
+      contact,
+    },
+    revalidate: 1,
+  };
 }
