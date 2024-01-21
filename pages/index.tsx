@@ -153,9 +153,15 @@ export const getStaticProps: GetStaticProps<Props> = async () => {
   const socials = await fetchSocials();
   const contact = await fetchContact();
 
+  if(!pageInfo || !experiences || !skills || !projects || !socials || !contact) {
+    return {
+      notFound: true,
+    }
+  }
+
   return {
     props: {
-      pageInfo,
+      pageInfo: pageInfo,
       experiences,
       skills,
       projects,
